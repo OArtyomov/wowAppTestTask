@@ -2,6 +2,8 @@ package com.wowapp.model;
 
 import java.util.Scanner;
 
+import static com.wowapp.model.Move.findByLetter;
+
 /*************************************************************************
  * * Yaypay CONFIDENTIAL   2018 
  * * All Rights Reserved. * *
@@ -21,13 +23,14 @@ public class User {
 
     public Move getMove() {
         // Invite to start the game
-        System.out.print("ROCK, PAPER, SCISSORS - enter first letter? ");
-        String userInput = getInputString();
-        userInput = userInput.toUpperCase();
-        Move result = Move.findByLetter(userInput.charAt(0));
-        if (result == null) {
-            // Ввод некорректный. Выведем запрос на ввод снова.
-            return getMove();
+        Move result = null;
+        while (result == null) {
+            System.out.print("ROCK, PAPER, SCISSORS - enter first letter? ");
+            String userInput = getInputString();
+            userInput = userInput.toUpperCase();
+            if (userInput.length() > 0) {
+                result = findByLetter(userInput.charAt(0));
+            }
         }
         return result;
     }
