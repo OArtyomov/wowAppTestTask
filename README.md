@@ -3,8 +3,8 @@ WowApp Test task readme
 
 Predefined software
 --------------------
-Java
-Maven
+1. Java
+2. Maven
 
 
 
