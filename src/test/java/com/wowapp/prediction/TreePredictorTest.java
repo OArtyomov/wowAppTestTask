@@ -1,5 +1,7 @@
-package com.wowapp;
+package com.wowapp.prediction;
 
+import com.wowapp.model.Move;
+import com.wowapp.prediction.TreePredictor;
 import org.junit.Test;
 
 public class TreePredictorTest {
@@ -9,13 +11,13 @@ public class TreePredictorTest {
     @Test
     public void predict() {
         treePredictor.predict();
-        treePredictor.store("P");
+        treePredictor.store(Move.PAPER);
         System.out.println(treePredictor.predict());
-        treePredictor.store("S");
+        treePredictor.store(Move.SCISSORS);
         System.out.println(treePredictor.predict());
-        treePredictor.store("S");
+        treePredictor.store(Move.SCISSORS);
         System.out.println(treePredictor.predict());
-        treePredictor.store("P");
+        treePredictor.store(Move.PAPER);
         System.out.println(treePredictor.predict());
     }
 }

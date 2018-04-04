@@ -1,7 +1,10 @@
 package com.wowapp;
 
 
-import java.util.Scanner;
+import com.wowapp.model.Computer;
+import com.wowapp.model.Move;
+import com.wowapp.model.User;
+import com.wowapp.prediction.TreePredictor;
 
 public class RockPaperScissors {
     private User user;
@@ -12,98 +15,15 @@ public class RockPaperScissors {
 
     private TreePredictor treePredictor;
 
-    private enum Move {
-        ROCK, PAPER, SCISSORS;
-
-        /**
-         * Сравнивает текущий ход с переданным в параметре otherMove и определяет
-         * победу, поражение или ничью.
-         *
-         * @param otherMove ход, с которым сравнивается текущий
-         * @return 1 если текущий ход бьет другой, -1 если другой ход бьет текущий,
-         * 0 в случае ничьей
-         */
-        public int compareMoves(Move otherMove) {
-            // Ничья
-            if (this == otherMove)
-                return 0;
-
-            switch (this) {
-                case ROCK:
-                    return (otherMove == SCISSORS ? 1 : -1);
-                case PAPER:
-                    return (otherMove == ROCK ? 1 : -1);
-                case SCISSORS:
-                    return (otherMove == PAPER ? 1 : -1);
-            }
-
-            // Этот код не должен выполняться никогда
-
-            return 0;
-        }
-    }
-
-    private class User {
-        private Scanner inputScanner;
-
-        public User() {
-            inputScanner = new Scanner(System.in);
-        }
-
-        public Move getMove() {
-            // Выведем запрос на ввод
-            System.out.print("ROCK, PAPER, SCISSORS - enter first letter? ");
-
-            // Прочитаем ввод пользователя
-            String userInput = inputScanner.nextLine();
-            userInput = userInput.toUpperCase();
-            char firstLetter = userInput.charAt(0);
-            if (firstLetter == 'R' || firstLetter == 'P' || firstLetter == 'S') {
-                // Ввод корректный
-                switch (firstLetter) {
-                    case 'R':
-                        return Move.ROCK;
-                    case 'P':
-                        return Move.PAPER;
-                    case 'S':
-                        return Move.SCISSORS;
-                }
-            }
-
-            // Ввод некорректный. Выведем запрос на ввод снова.
-            return getMove();
-        }
-
-        public boolean playAgain() {
-            System.out.print("Do you want to play again? ");
-            String userInput = inputScanner.nextLine();
-            userInput = userInput.toUpperCase();
-            return userInput.charAt(0) == 'Y';
-        }
-    }
-
-    private class Computer {
-        public Move getMove() {
-            String computerWay = treePredictor.predict();
-            if (computerWay != null) {
-                for (Move currentMode : Move.values()) {
-                    if (currentMode.name().startsWith(computerWay)) {
-                        return currentMode;
-                    }
-                }
-            }
-            throw new RuntimeException();
-        }
-    }
 
     public RockPaperScissors() {
+        treePredictor = new TreePredictor();
+        treePredictor.predict();
         user = new User();
-        computer = new Computer();
+        computer = new Computer(treePredictor);
         userScore = 0;
         computerScore = 0;
         numberOfGames = 0;
-        treePredictor = new TreePredictor();
-        treePredictor.predict();
     }
 
     public void startGame() {
@@ -114,8 +34,7 @@ public class RockPaperScissors {
         Move computerMove = computer.getMove();
         System.out.println("\nYour choice " + userMove + ".");
         System.out.println("Computer choice " + computerMove + ".\n");
-        String firstLetter = userMove.name().substring(0, 1);
-        treePredictor.store(firstLetter);
+        treePredictor.store(userMove);
         // Сравнение ходов и определение победителя
         int compareMoves = userMove.compareMoves(computerMove);
         switch (compareMoves) {
@@ -144,7 +63,6 @@ public class RockPaperScissors {
 
     /**
      * Print statistic. Tie means 0.5 of victory
-     *
      */
     private void printGameStats() {
         int wins = userScore;

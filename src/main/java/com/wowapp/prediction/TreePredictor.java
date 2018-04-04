@@ -1,22 +1,27 @@
-package com.wowapp;
+package com.wowapp.prediction;
+
+import com.wowapp.model.Move;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static com.wowapp.model.Move.PAPER;
+import static com.wowapp.model.Move.ROCK;
+import static com.wowapp.model.Move.SCISSORS;
 
 public class TreePredictor {
 
     private Random random = new Random();
 
-    private List<String> choices = newArrayList("R", "P", "S");
+    private List<Move> choices = newArrayList(ROCK, PAPER, SCISSORS);
 
     //Computer move
     private Integer prevChoice;
 
     // Player move
-    private String prevMove;
+    private Move prevMove;
 
     private Integer prevRes;
 
@@ -32,11 +37,6 @@ public class TreePredictor {
     private boolean playrand;
 
     public TreePredictor() {
-        for (int i = 0, n = 3; i < n; i++) {
-            for (int j = 0, k = 3; j < k; j++) {
-                dataArray[i][j] = 0.0;
-            }
-        }
 
         gameMat.add(new int[]{1, 0, 2});
         gameMat.add(new int[]{2, 1, 0});
@@ -51,7 +51,7 @@ public class TreePredictor {
         //self.mult = 1.0
     }
 
-    private int gameRes(String c1, String c2) {
+    private int gameRes(Move c1, Move c2) {
         int i1 = choices.indexOf(c1);
         int i2 = choices.indexOf(c2);
         return gameMat.get(i1)[i2];
@@ -79,10 +79,10 @@ public class TreePredictor {
     }
 
 
-    public String predict() {
+    public Move predict() {
         if (prevChoice == null || prevRes == null) {
             int startIndex = new Random().nextInt(3);
-            String ret = choices.get(startIndex);
+            Move ret = choices.get(startIndex);
             prevMove = ret;
             return ret;
         }
@@ -116,7 +116,7 @@ public class TreePredictor {
     }
 
 
-    public void store(String c) {
+    public void store(Move c) {
 
         int i1 = choices.indexOf(c);
 
