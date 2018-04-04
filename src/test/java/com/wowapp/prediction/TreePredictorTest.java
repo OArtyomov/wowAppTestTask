@@ -1,7 +1,6 @@
 package com.wowapp.prediction;
 
 import com.wowapp.model.Move;
-import com.wowapp.prediction.TreePredictor;
 import org.junit.Ignore;
 import org.junit.Test;
 
